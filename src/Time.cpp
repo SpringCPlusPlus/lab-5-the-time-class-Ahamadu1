@@ -5,16 +5,30 @@ using namespace std;
 // Overload the + operator
 Time Time::operator+(const Time &other) const
 {
-    int totalMinutes = (hours + other.hours) * 60 + (minutes + other.minutes);
-    return Time(totalMinutes / 60, totalMinutes % 60);
+    int total_hours = hours + other.hours;
+    int total_minutes = minutes + other.minutes;
+    
+    // Handle overflow of minutes
+    if (total_minutes >= 60) {
+        total_hours += total_minutes / 60;
+        total_minutes %= 60;
+    }
+    
+    return Time(total_hours, total_minutes);
 }
 
 // Overload the += operator
 Time& Time::operator+=(const Time &other)
 {
+    hours += other.hours;
     minutes += other.minutes;
-    hours += other.hours + (minutes / 60);
-    minutes %= 60;
+    
+    // Handle overflow of minutes
+    if (minutes >= 60) {
+        hours += minutes / 60;
+        minutes %= 60;
+    }
+    
     return *this;
 }
 
